@@ -1,2 +1,5 @@
-<h1>Welcome to Tenki Travel</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<script lang="ts">
+  import TenkiMap from '$lib/components/TenkiMap.svelte';
+</script>
+
+<TenkiMap/>
