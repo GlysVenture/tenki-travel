@@ -1,23 +1,17 @@
-import type { LngLatLike } from "svelte-maplibre"
+import type { Feature } from 'geojson';
 
 export interface Station {
-    id: string,
     name: string,
-    score?: string | null,
     coordinate: {
         type: "WGS84",
         x: number,
         y: number
     },
-    distance?: string | null,
-    icon: string
 }
 
 export interface StationTime {
     station: Station,
-    departure: string | null, // datetime
     departureTimestamp: number | null,
-    arrival: string | null, // datetime
     arrivalTimestamp: number | null,
 }
 
@@ -32,8 +26,7 @@ export interface Journey {
 export interface Section {
     arrival: StationTime,
     departure: StationTime,
-    journey: Journey,
-    walk: null | string
+    journey: Journey | null,
 }
 
 export interface Connection {
@@ -44,9 +37,7 @@ export interface Connection {
     sections: Section[]
 }
 
-export interface TravelJourney {
-    start: LngLatLike,
-    end: LngLatLike,
-    connection: Connection
+export interface SectionLine {
+    color: string,
+    feature: Feature
 }
-

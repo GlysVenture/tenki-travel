@@ -1,10 +1,11 @@
 <script lang="ts">
   import TenkiMap from '$lib/components/TenkiMap.svelte';
-  import type { Connection, Station, TravelJourney } from '$lib/types';
+  import { appendWalk, prependWalk } from '$lib/connections';
+  import type { Connection, Station } from '$lib/types';
   import type { LngLat } from 'maplibre-gl';
 
   let locations: [LngLat, Station][] = $state([]);
-  let travels: TravelJourney[] = $state([]);
+  let travels: Connection[] = $state([]);
 
   $effect(() => console.log(locations));
 
@@ -26,7 +27,7 @@
             y: loc.lng.toString(),
         }).toString()
     ).then((res) => res.json())
-        .then((data) => data.stations?.filter((s: Station) => s.id).at(0));
+        .then((data) => data.stations?.filter((s: { id: string }) => s.id).at(0));
     
     locations.push([loc, station]);
 
@@ -36,15 +37,12 @@
 
       fetch_connection(start[1].name, end[1].name)
         .then((connections) => {
-          const connection = connections.at(0);
+          let connection = connections.at(0);
           if (connection) {
-            travels.push(
-              {
-                start: start[0],
-                end: end[0],
-                connection
-              }
-            );
+            connection = prependWalk(connection, start[0]);
+            connection = appendWalk(connection, end[0]);
+            console.log(connection);
+            travels.push(connection);
           }
         });
     }
@@ -52,4 +50,4 @@
 
 </script>
 
-<TenkiMap start={locations.at(0)?.[0]} {travels} onaddlocation={addLocation}/>
+<TenkiMap start={locations.at(0)?.[0]} connections={travels} onaddlocation={addLocation}/>

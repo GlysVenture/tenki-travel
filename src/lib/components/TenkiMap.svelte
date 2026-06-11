@@ -2,16 +2,27 @@
     import type { LngLatBoundsLike, LngLatLike } from 'svelte-maplibre';
     import { DefaultMarker, MapEvents, MapLibre } from 'svelte-maplibre';
     import { type MapMouseEvent } from 'maplibre-gl';
-    import { type LngLat } from 'maplibre-gl';
-    import type { Connection, TravelJourney } from '$lib/types';
+    import * as ML from 'maplibre-gl';
+    import type { LngLat } from 'maplibre-gl';
+    import type { Connection } from '$lib/types';
     import ConnectionMap from './ConnectionMap.svelte';
 
-    let { start, travels, onaddlocation } :
-        { start: LngLatLike | undefined, travels: TravelJourney[], onaddlocation: (loc: LngLat) => Promise<void> } 
+    let { start, connections, onaddlocation } :
+        { start: LngLatLike | undefined, connections: Connection[], onaddlocation: (loc: LngLat) => Promise<void> } 
         = $props();
 
-    let markers: LngLatLike[] = $derived(start ? [start, ...(travels.map((t) => t.end))] : []);
-    let connections: Connection[] = $derived(travels.map((t) => t.connection));
+    let markers: LngLatLike[] = $derived.by(() => {
+        if (start === undefined)
+            return [];
+
+        
+        return [
+            start,
+            ...connections.map((c) => c.sections.at(-1)).filter((s) => s !== undefined).map(
+                (s) => ML.LngLat.convert([s.arrival.station.coordinate.y, s.arrival.station.coordinate.x])
+            )
+        ];
+    });
 
     const maxbounds: LngLatBoundsLike = [5.02, 45.5, 11.5, 48];
 </script>
