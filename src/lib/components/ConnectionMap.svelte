@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { Connection, SectionLine } from '$lib/types';
     import type { Feature } from 'geojson';
-    import { LineLayer, GeoJSON } from 'svelte-maplibre';
+    import { LineLayer, GeoJSON, Popup } from 'svelte-maplibre';
 
     let { connection } : { connection: Connection } = $props();
 
@@ -10,12 +10,15 @@
         let f: SectionLine[] = [];
 
         for (const s of connection.sections) {
+            const n = `${s.journey?.category || 'walk'}: ${s.departure.station.name}  ->  ${s.arrival.station.name}`;
             f.push({
                 color: line_color(s.journey?.category),
+                name: n,
+                type: s.journey?.category || 'walk',
                 feature: {
                     type: 'Feature',
                     properties: {
-                        name: `${s.journey?.category || 'walk'}: ${s.departure.station.name}  ->  ${s.arrival.station.name}`,
+                        name: n,
                     },
                     geometry: {
                     type: 'LineString',
@@ -43,8 +46,10 @@
         switch (category) {
             case "B": return "#22c202";
             case "IC": return "#fa0710";
-            case "RE": return "#fa0ab6";
-            case "R": return "#fa6007";
+            case "IR": return "#fc0568";
+            case "RE": return "#fc8105";
+            case "R": return "#fab107";
+            case "S": return "#07b3e3";
             default: return "#fcc203";
         }
     }
@@ -60,6 +65,10 @@
                 'line-color': d.color,
                 'line-opacity': 0.8,
             }}
-        />
+        >
+            <Popup openOn='hover'>
+                {d.name}
+            </Popup>
+        </LineLayer>
     </GeoJSON>
 {/each}

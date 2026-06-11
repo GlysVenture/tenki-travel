@@ -39,5 +39,7 @@ export interface Connection {
 
 export interface SectionLine {
     color: string,
+    name: string,
+    type: string,
     feature: Feature
 }
