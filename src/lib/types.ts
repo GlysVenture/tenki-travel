@@ -1,3 +1,5 @@
+import type { LngLatLike } from "svelte-maplibre"
+
 export interface Station {
     id: string,
     name: string,
@@ -40,5 +42,11 @@ export interface Connection {
     duration: string // time
     transfers: number,
     sections: Section[]
+}
+
+export interface TravelJourney {
+    start: LngLatLike,
+    end: LngLatLike,
+    connection: Connection
 }
 
