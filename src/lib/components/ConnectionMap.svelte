@@ -10,7 +10,8 @@
         let f: SectionLine[] = [];
 
         for (const s of connection.sections) {
-            const n = `${s.journey?.category || 'walk'}: ${s.departure.station.name}  ->  ${s.arrival.station.name}`;
+            let id = s.journey ? `${s.journey.category} ${s.journey.number}` : 'walk';
+            const n = `${id}: ${s.departure.station.name}  ->  ${s.arrival.station.name}`;
             f.push({
                 color: line_color(s.journey?.category),
                 name: n,
@@ -61,7 +62,6 @@
             layout={{ 'line-cap': 'round', 'line-join': 'round' }}
             paint={{
                 'line-width': 5,
-                'line-dasharray': [5, 2],
                 'line-color': d.color,
                 'line-opacity': 0.8,
             }}
