@@ -1,4 +1,7 @@
-import type { Feature } from 'geojson';
+import type { LngLatLike } from 'svelte-maplibre';
+
+export type ColorRGB = [number, number, number];
+export type ColorHex = string;
 
 export interface Station {
     name: string,
@@ -38,8 +41,9 @@ export interface Connection {
 }
 
 export interface SectionLine {
-    color: string,
+    color: ColorRGB,
     name: string,
     type: string,
-    feature: Feature
+    start: LngLatLike,
+    end: LngLatLike
 }
